@@ -91,22 +91,22 @@ bot.on('message', (user, userID, channelID, message, event) => {
     }
 
     if (message.startsWith('>reddit')) {
-        let sub, url = '';
+        let url = '';
         const args = message.split(' ');
+        const sub = args[1];
         const requestedAmount = parseInt(args[2]);
-        const subreddit = args[1];
         const maxAmount = 5;
 
-        if (!subreddit) {
+        if (!sub) {
             bot.sendMessage({
                 to: channelID,
-                message: 'Please enter a subreddit to get stuff from',
+                message: 'Please enter a sub to get posts from',
             });
         } else {
             if (args[3] && args[3] === 'top') {
-                url = `https://www.reddit.com/r/${subreddit}/top/.json?sort=top&t=all`;
+                url = `https://www.reddit.com/r/${sub}/top/.json?sort=top&t=all`;
             } else {
-                url = `https://www.reddit.com/r/${subreddit}/.json`;
+                url = `https://www.reddit.com/r/${sub}/.json`;
             }
 
             https.get(url, function(res){
@@ -120,7 +120,7 @@ bot.on('message', (user, userID, channelID, message, event) => {
                     if (body.indexOf('302 Found') > -1) {
                         bot.sendMessage({
                             to: channelID,
-                            message: 'No data found for the specified subreddit',
+                            message: `No posts found for /r/${sub}`,
                         });
                         return;
                     }
@@ -133,7 +133,7 @@ bot.on('message', (user, userID, channelID, message, event) => {
                     if (!responseNoStickies.length || responseNoStickies.length < requestedAmount) {
                         bot.sendMessage({
                             to: channelID,
-                            message: 'Not enough images found for this sub',
+                            message: `Not enough posts found for /r/${sub}`,
                         });
                         return;
                     }
