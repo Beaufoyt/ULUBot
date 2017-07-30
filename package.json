@@ -1,0 +1,22 @@
+{
+  "name": "ulubot",
+  "version": "1.0.0",
+  "description": "uluru",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint index.js",
+    "start-dev": "nodemon index.js --exec \"npm run lint -s && node\"",
+    "start": "node index.js",
+    "test": "echo \\\"Error: no test specified\\\" && exit 1\""
+  },
+  "author": "Tom Beaufoy",
+  "license": "ISC",
+  "dependencies": {
+    "discord.io": "^2.5.1"
+  },
+  "devDependencies": {
+    "babel-eslint": "^7.2.3",
+    "eslint": "^4.3.0",
+    "nodemon": "^1.11.0"
+  }
+}
