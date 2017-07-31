@@ -12,7 +12,8 @@
   "author": "Tom Beaufoy",
   "license": "ISC",
   "dependencies": {
-    "discord.io": "^2.5.1"
+    "discord.io": "^2.5.1",
+    "node-wolfram": "0.0.1"
   },
   "devDependencies": {
     "babel-eslint": "^7.2.3",

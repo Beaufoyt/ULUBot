@@ -1,6 +1,11 @@
 const Discord = require('discord.io');
 const https = require('https');
+const WolframLib = require('node-wolfram');
+
 const config = require('./config.js');
+
+const wolfram = new WolframLib(config.wolframAppId);
+const resultOpts = ['Result', 'Exact result', 'Decimal approximation'];
 const bot = new Discord.Client({
     token: config.token,
     autorun: true,
@@ -33,8 +38,36 @@ bot.on('message', (user, userID, channelID, message, event) => {
     if (message === '>bugo') {
         bot.sendMessage({
             to: channelID,
-            message: 'you don\'t wanna know... \n' +
-                'trust me',
+            message: 'you don\'t wanna know...',
+        });
+    }
+
+    if (message.substring(0, 10) === '>question ') {
+        wolfram.query(message.substring(10, message.length), function(err, result) {
+            if(err) {
+                bot.sendMessage({
+                    to: channelID,
+                    message: 'Sorry, I couldn\'t process the question at this time',
+                });
+            } else if (result.queryresult.pod != undefined) {
+                let img = '';
+                const text = result.queryresult.pod[1].subpod[0].plaintext;
+                const finalText = (text.toString() === '19') ? 'You stoopid' : null;
+
+                if (result.queryresult.pod[1].subpod[0].img[0]) {
+                    img = result.queryresult.pod[1].subpod[0].img[0].$.src;
+                };
+
+                bot.sendMessage({
+                    to: channelID,
+                    message: finalText || img,
+                });
+            } else {
+                bot.sendMessage({
+                    to: channelID,
+                    message: 'I don\'t seem to have an answer to that question',
+                });
+            }
         });
     }
 
@@ -126,6 +159,15 @@ bot.on('message', (user, userID, channelID, message, event) => {
                     }
 
                     const response = JSON.parse(body);
+
+                    if (!response.data || !response.data.children || !response.data.children.length) {
+                        bot.sendMessage({
+                            to: channelID,
+                            message: `No posts found for /r/${sub}`,
+                        });
+                        return;
+                    }
+
                     const responseNoStickies = response.data.children.filter((child) => {
                         return !child.data.stickied;
                     });

@@ -19,7 +19,8 @@
     "object-shorthand": 1,
     "comma-dangle": [1, "always-multiline"],
     "prefer-template": 1,
-    "quotes": [1, "single"]
+    "quotes": [1, "single"],
+    "indent": ["error", 4],
   },
   "env": {
     "node": true,
