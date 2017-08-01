@@ -1,5 +1,6 @@
 const Discord = require('discord.io');
 const https = require('https');
+const http = require('http');
 const WolframLib = require('node-wolfram');
 
 const config = require('./config.js');
@@ -121,6 +122,25 @@ bot.on('message', (user, userID, channelID, message, event) => {
                 message: `${args[1]  } is a ${   Math.floor(Math.random() * 10) + 1  } out of 10`,
             });
         }
+    }
+
+    if (message.startsWith('>numberfact')) {
+        http.get('http://numbersapi.com/random', function(res){
+            let body = '';
+
+            res.on('data', function(chunk){
+                body += chunk;
+            });
+
+            res.on('end', function(){
+                bot.sendMessage({
+                    to: channelID,
+                    message: body,
+                });
+            });
+        }).on('error', function(e){
+            console.log('Got an error: ', e);
+        });
     }
 
     if (message.startsWith('>reddit')) {
